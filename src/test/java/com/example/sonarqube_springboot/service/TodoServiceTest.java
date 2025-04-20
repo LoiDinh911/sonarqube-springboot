@@ -8,6 +8,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -29,11 +30,11 @@ class TodoServiceTest {
   }
 
   @Test
-  void getAllTodos() {
+  void getAllTodos_ShouldReturnAllTodos() {
     // Arrange
     List<Todo> expectedTodos = Arrays.asList(
-        new Todo(1L, "Task 1", "Description 1", false, null, null),
-        new Todo(2L, "Task 2", "Description 2", true, null, null));
+        new Todo(1L, "Task 1", "Description 1", false, LocalDateTime.now(), LocalDateTime.now()),
+        new Todo(2L, "Task 2", "Description 2", true, LocalDateTime.now(), LocalDateTime.now()));
     when(todoRepository.findAll()).thenReturn(expectedTodos);
 
     // Act
@@ -46,10 +47,10 @@ class TodoServiceTest {
   }
 
   @Test
-  void getTodoById() {
+  void getTodoById_WhenTodoExists_ShouldReturnTodo() {
     // Arrange
     Long id = 1L;
-    Todo expectedTodo = new Todo(id, "Task 1", "Description 1", false, null, null);
+    Todo expectedTodo = new Todo(id, "Task 1", "Description 1", false, LocalDateTime.now(), LocalDateTime.now());
     when(todoRepository.findById(id)).thenReturn(Optional.of(expectedTodo));
 
     // Act
@@ -62,10 +63,24 @@ class TodoServiceTest {
   }
 
   @Test
-  void createTodo() {
+  void getTodoById_WhenTodoDoesNotExist_ShouldReturnEmpty() {
+    // Arrange
+    Long id = 1L;
+    when(todoRepository.findById(id)).thenReturn(Optional.empty());
+
+    // Act
+    Optional<Todo> actualTodo = todoService.getTodoById(id);
+
+    // Assert
+    assertFalse(actualTodo.isPresent());
+    verify(todoRepository, times(1)).findById(id);
+  }
+
+  @Test
+  void createTodo_ShouldSaveAndReturnTodo() {
     // Arrange
     Todo todoToCreate = new Todo(null, "New Task", "New Description", false, null, null);
-    Todo savedTodo = new Todo(1L, "New Task", "New Description", false, null, null);
+    Todo savedTodo = new Todo(1L, "New Task", "New Description", false, LocalDateTime.now(), LocalDateTime.now());
     when(todoRepository.save(todoToCreate)).thenReturn(savedTodo);
 
     // Act
@@ -78,10 +93,10 @@ class TodoServiceTest {
   }
 
   @Test
-  void updateTodo() {
+  void updateTodo_WhenTodoExists_ShouldUpdateAndReturnTodo() {
     // Arrange
     Long id = 1L;
-    Todo existingTodo = new Todo(id, "Old Task", "Old Description", false, null, null);
+    Todo existingTodo = new Todo(id, "Old Task", "Old Description", false, LocalDateTime.now(), LocalDateTime.now());
     Todo updatedTodo = new Todo(id, "Updated Task", "Updated Description", true, null, null);
     when(todoRepository.findById(id)).thenReturn(Optional.of(existingTodo));
     when(todoRepository.save(existingTodo)).thenReturn(updatedTodo);
@@ -98,7 +113,20 @@ class TodoServiceTest {
   }
 
   @Test
-  void deleteTodo() {
+  void updateTodo_WhenTodoDoesNotExist_ShouldThrowException() {
+    // Arrange
+    Long id = 1L;
+    Todo updatedTodo = new Todo(id, "Updated Task", "Updated Description", true, null, null);
+    when(todoRepository.findById(id)).thenReturn(Optional.empty());
+
+    // Act & Assert
+    assertThrows(RuntimeException.class, () -> todoService.updateTodo(id, updatedTodo));
+    verify(todoRepository, times(1)).findById(id);
+    verify(todoRepository, never()).save(any());
+  }
+
+  @Test
+  void deleteTodo_ShouldDeleteTodo() {
     // Arrange
     Long id = 1L;
 
