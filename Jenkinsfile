@@ -3,8 +3,8 @@ pipeline {
 
     environment {
         SONAR_TOKEN = credentials('sonar-token')
-        SONAR_HOST_URL = 'http://<sonar-server-ip>:9000'
-        DOCKER_IMAGE = 'yourdockerhubusername/your-image-name'
+        SONAR_HOST_URL = 'http://localhost:9000'
+        DOCKER_IMAGE = 'loind0911/your-image-name'
     }
 
     stages {
