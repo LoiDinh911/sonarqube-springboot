@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         SONAR_TOKEN = credentials('sonar-token')
-        SONAR_HOST_URL = 'http://localhost:9000'
+        SONAR_HOST_URL = 'http://host.docker.internal:9000'
         DOCKER_IMAGE = 'loind0911/sonarqube-springboot'
     }
 
