@@ -2,8 +2,8 @@ pipeline {
     agent any
 
     environment {
-        SONAR_TOKEN = credentials('sonar-token')
-        SONAR_HOST_URL = 'http://sonarqube:9000'
+        SONAR_TOKEN = credentials('sonar-token') // Stored in Jenkins credentials
+        SONAR_HOST_URL = 'http://sonarqube:9000' // 🧠 Important: NOT localhost
         DOCKER_IMAGE = 'loind0911/sonarqube-springboot'
     }
 
