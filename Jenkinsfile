@@ -3,7 +3,6 @@ pipeline {
 
     environment {
         SONAR_TOKEN = credentials('sonar-token') // Stored in Jenkins credentials
-        SONAR_HOST_URL = 'http://sonarqube:9000' // 🧠 Important: NOT localhost
         DOCKER_IMAGE = 'loind0911/sonarqube-springboot'
     }
 
@@ -23,12 +22,7 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv('MySonarQube') {
-                    sh """
-                      mvn sonar:sonar \
-                        -Dsonar.projectKey=sonarqube-springboot \
-                        -Dsonar.host.url=$SONAR_HOST_URL \
-                        -Dsonar.token=$SONAR_TOKEN
-                    """
+                    sh 'mvn sonar:sonar -Dsonar.projectKey=sonarqube-springboot'
                 }
             }
         }
