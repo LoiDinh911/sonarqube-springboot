@@ -4,7 +4,7 @@ pipeline {
     environment {
         SONAR_TOKEN = credentials('sonar-token')
         SONAR_HOST_URL = 'http://localhost:9000'
-        DOCKER_IMAGE = 'loind0911/your-image-name'
+        DOCKER_IMAGE = 'loind0911/sonarqube-springboot'
     }
 
     stages {
@@ -25,9 +25,9 @@ pipeline {
                 withSonarQubeEnv('MySonarQube') {
                     sh """
                       mvn sonar:sonar \
-                        -Dsonar.projectKey=myproject \
+                        -Dsonar.projectKey=sonarqube-springboot \
                         -Dsonar.host.url=$SONAR_HOST_URL \
-                        -Dsonar.login=$SONAR_TOKEN
+                        -Dsonar.token=$SONAR_TOKEN
                     """
                 }
             }
@@ -49,7 +49,7 @@ pipeline {
 
         stage('Push Docker Image') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                withCredentials([usernamePassword(credentialsId: '5ceaf9c5-6d8f-4273-899f-deed4c2fccd8', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
                     sh """
                       echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
                       docker push $DOCKER_IMAGE
