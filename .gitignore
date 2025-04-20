@@ -1,0 +1,64 @@
+# Maven build
+/target/
+!.mvn/wrapper/maven-wrapper.jar
+
+# IDEs
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+*.class
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Environment files
+.env
+*.env
+
+# Temporary files
+*.swp
+*.swo
+*.bak
+
+# Eclipse
+.project
+.classpath
+.settings/
+
+# STS (Spring Tool Suite)
+.springBeans
+
+# IntelliJ
+out/
+*.iws
+*.ipr
+*.iml
+
+# Sonar
+/.scannerwork/
+
+# Jenkins
+workspace/
+
+# Coverage / Test Reports
+jacoco.exec
+coverage-report/
+test-output/
+
+# Database
+*.mv.db
+*.h2.db
+
+# Application specific
+*.war
+*.jar
+
+# Security
+keystore.p12
+secrets/
