@@ -1,31 +1,20 @@
 pipeline {
-    agent any
-
-    tools {
-        jdk 'JDK17'        // Optional if set in Jenkins
-        maven 'Maven3'     // Optional if using Maven tool config
-    }
-
-    environment {
-        BUILD_ENV = 'prod'
+    agent {
+        docker {
+            image 'maven:3.9.6-eclipse-temurin-21'
+        }
     }
 
     stages {
-        stage('Clone Repo') {
-            steps {
-                checkout scm
-            }
-        }
-
         stage('Build') {
             steps {
-                sh './mvnw clean package'   // Or just 'mvn clean package' if no wrapper
+                sh 'mvn clean package'
             }
         }
 
         stage('Test') {
             steps {
-                sh './mvnw test'
+                sh 'mvn test'
             }
         }
 
